@@ -1,4 +1,4 @@
-#!/home/joost/Nextcloud/_Developing/Lowrider3CNC/pythonCNC/probeTool/.venv/bin/python3
+#!/home/joost/Nextcloud/_Developing/Lowrider3CNC/pythonCNC/probeTool/.venv/bin/python
 # -*- coding: utf-8 -*-
 import re
 import sys

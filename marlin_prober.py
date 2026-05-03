@@ -25,7 +25,7 @@ class MarlinProber:
         self.ax_rel = None
         self.live_line = None
 
-    def configure(self, l_ax, start, end, count, fixed_vals, p_ax, dir_pos, offset, probe_dist, host=""):
+    def configure(self, l_ax, start, end, count, fixed_vals, p_ax, dir_pos, offset, probe_dist, host="", feed_move=2000, feed_probe=100):
         """Programmatic configuration entry point."""
         self.host = host
         dir_mult = 1 if dir_pos else -1
@@ -39,7 +39,9 @@ class MarlinProber:
             'probe_dist': probe_dist,
             'start': start, 
             'end': end, 
-            'count': count
+            'count': count,
+            'feed_move': feed_move,
+            'feed_probe': feed_probe
         }
 
         # Generate point list
@@ -55,15 +57,17 @@ class MarlinProber:
     def _generate_gcode(self):
         self.recipe = []
         p_ax = self.config['p_ax']
+        feed_move = self.config['feed_move']
+        feed_probe = self.config['feed_probe']
         for pt in self.points:
             staging_val = pt[p_ax] - (self.config['offset'] * self.config['dir_mult'])
-            self.recipe.append(f"G0 {p_ax}{staging_val:.3f} F2000")
-            move_cmd = "G0 " + " ".join([f"{k}{v:.3f}" for k, v in pt.items() if k != p_ax])
+            self.recipe.append(f"G0 {p_ax}{staging_val:.3f} F{feed_move}")
+            move_cmd = "G0 " + " ".join([f"{k}{v:.3f}" for k, v in pt.items() if k != p_ax]) + f" F{feed_move}"
             self.recipe.append(move_cmd)
             target_probe = pt[p_ax] + (self.config['probe_dist'] * self.config['dir_mult'])
-            self.recipe.append(f"G38.2 {p_ax}{target_probe:.3f} F100")
+            self.recipe.append(f"G38.2 {p_ax}{target_probe:.3f} F{feed_probe}")
             self.recipe.append("M114 D")
-            self.recipe.append(f"G0 {p_ax}{staging_val:.3f}")
+            self.recipe.append(f"G0 {p_ax}{staging_val:.3f} F{feed_move}")
 
     def setup_visualization(self):
         plt.ion()
@@ -110,7 +114,15 @@ class MarlinProber:
             base_val = self.config['fixed_vals'].get(p_ax, 0)
             # Simulated noise + slight tilt
             sim_val = base_val + (len(self.abs_results) * 0.02) + random.gauss(0, 0.01)
-            return f"X:0.00 Y:0.00 Z:0.00 E:0.00 Count X:0 Y:0 Z:0\nLogical {p_ax}: {sim_val:.4f}\nok\n"
+            # Match the real Marlin M114 D output format:
+            # "Logical: X: 0.000 Y: 3.430 Z: 0.000"
+            axis_vals = {ax: (sim_val if ax == p_ax else 0.0) for ax in ['X', 'Y', 'Z']}
+            logical = " ".join(f"{ax}: {v:.3f}" for ax, v in axis_vals.items())
+            return (
+                f"X:0.00 Y:0.00 Z:0.00 Count X:0 Y:0 Z:0\n"
+                f"Logical: {logical}\n"
+                f"ok\n"
+            )
         return "ok\n"
 
     def run(self):
@@ -128,13 +140,30 @@ class MarlinProber:
             else:
                 tn.write(f"{cmd}\n".encode('ascii'))
                 response = ""
+                # Read lines until we get an 'ok' acknowledgement or a kill signal.
+                # Marlin signals a kill/emergency-stop with a line starting with '!!'
+                # (e.g. "!! KILL called!"). The matching G-code command to trigger
+                # this from the host side is M112 (Emergency Stop).
                 while "ok" not in response.lower():
-                    response += tn.read_until(b"\n", timeout=5).decode('ascii')
+                    line = tn.read_until(b"\n", timeout=5).decode('ascii')
+                    response += line
+                    if line.startswith("!!"):
+                        print(f"[KILL SIGNAL]: {line.strip()}")
+                        print("[ABORT]: Marlin kill signal received — stopping command sequence.")
+                        print("[INFO]: Send M112 to trigger an emergency stop from the host.")
+                        if tn:
+                            tn.close()
+                        raise RuntimeError(
+                            f"Marlin kill signal detected: '{line.strip()}'. "
+                            "Sequence aborted. Use M112 to command an emergency stop."
+                        )
                 print(f"[SEND]: {cmd}\n[RECV]: {response.strip()}")
 
             if "M114 D" in cmd:
-                pattern = rf"Logical\s+{self.config['p_ax']}:\s*([-+]?\d*\.\d+|\d+)"
-                match = re.search(pattern, response, re.IGNORECASE)
+                # Real Marlin format: "Logical: X: 0.000 Y: 3.430 Z: 0.000"
+                # Regex skips past "Logical:" and any preceding axes to reach p_ax.
+                pattern = rf"Logical:.*?\b{self.config['p_ax']}:\s*([-+]?\d*\.\d+|\d+)"
+                match = re.search(pattern, response, re.IGNORECASE | re.DOTALL)
                 if match:
                     abs_val = float(match.group(1))
                     self.abs_results.append(abs_val)

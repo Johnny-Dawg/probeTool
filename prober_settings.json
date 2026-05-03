@@ -1,0 +1,17 @@
+{
+  "l_ax": "X",
+  "start": "0.0",
+  "end": "40",
+  "count": "5",
+  "p_ax": "Y",
+  "dir_pos": "1",
+  "offset": "0",
+  "probe_dist": "5",
+  "feed_move": "4000",
+  "feed_probe": "100",
+  "host": "192.168.2.132",
+  "debug_mode": "0",
+  "fixed_X": "0.0",
+  "fixed_Y": "0",
+  "fixed_Z": "0"
+}

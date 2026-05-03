@@ -1,0 +1,153 @@
+X:40.0000 Y:3.0000 Z:0.0000 Count X:101800 Y:61500 Z:6000
+
+Logical: X: 40.000 Y: 3.000 Z: 0.000
+
+Raw:     X: 1018.000 Y: 615.000 Z: 15.000
+
+Stepper: X:101800 Y:61500 Z:6000
+
+FromStp: X: 1018.000 Y: 615.000 Z: 15.000
+
+Diff:    X: 0.000 Y: 0.000 Z: 0.000
+
+ok
+
+ok
+
+ok
+
+ok
+
+echo:busy: processing
+
+echo:busy: processing
+
+echo:busy: processing
+
+ok
+
+X:0.0000 Y:3.4300 Z:0.0000 Count X:97800 Y:61543 Z:6000
+
+Logical: X: 0.000 Y: 3.430 Z: 0.000
+
+Raw:     X: 978.000 Y: 615.430 Z: 15.000
+
+Stepper: X:97800 Y:61543 Z:6000
+
+FromStp: X: 978.000 Y: 615.430 Z: 15.000
+
+Diff:    X: 0.000 Y: 0.000 Z: 0.000
+
+ok
+
+ok
+
+ok
+
+ok
+
+echo:busy: processing
+
+echo:busy: processing
+
+echo:busy: processing
+
+ok
+
+X:10.0000 Y:3.4300 Z:0.0000 Count X:98800 Y:61543 Z:6000
+
+Logical: X: 10.000 Y: 3.430 Z: 0.000
+
+Raw:     X: 988.000 Y: 615.430 Z: 15.000
+
+Stepper: X:98800 Y:61543 Z:6000
+
+FromStp: X: 988.000 Y: 615.430 Z: 15.000
+
+Diff:    X: 0.000 Y: 0.000 Z: 0.000
+
+ok
+
+ok
+
+ok
+
+ok
+
+echo:busy: processing
+
+echo:busy: processing
+
+echo:busy: processing
+
+ok
+
+X:20.0000 Y:3.4200 Z:0.0000 Count X:99800 Y:61542 Z:6000
+
+Logical: X: 20.000 Y: 3.420 Z: 0.000
+
+Raw:     X: 998.000 Y: 615.420 Z: 15.000
+
+Stepper: X:99800 Y:61542 Z:6000
+
+FromStp: X: 998.000 Y: 615.420 Z: 15.000
+
+Diff:    X: 0.000 Y: 0.000 Z: 0.000
+
+ok
+
+ok
+
+ok
+
+ok
+
+echo:busy: processing
+
+echo:busy: processing
+
+echo:busy: processing
+
+ok
+
+X:30.0000 Y:3.3800 Z:0.0000 Count X:100800 Y:61538 Z:6000
+
+Logical: X: 30.000 Y: 3.380 Z: 0.000
+
+Raw:     X: 1008.000 Y: 615.380 Z: 15.000
+
+Stepper: X:100800 Y:61538 Z:6000
+
+FromStp: X: 1008.000 Y: 615.380 Z: 15.000
+
+Diff:    X: 0.000 Y: 0.000 Z: 0.000
+
+ok
+
+ok
+
+ok
+
+ok
+
+echo:busy: processing
+
+echo:busy: processing
+
+echo:busy: processing
+
+ok
+
+X:40.0000 Y:3.3900 Z:0.0000 Count X:101800 Y:61539 Z:6000
+
+Logical: X: 40.000 Y: 3.390 Z: 0.000
+
+Raw:     X: 1018.000 Y: 615.390 Z: 15.000
+
+Stepper: X:101800 Y:61539 Z:6000
+
+FromStp: X: 1018.000 Y: 615.390 Z: 15.000
+
+Diff:    X: 0.000 Y: 0.000 Z: 0.000
+
+ok

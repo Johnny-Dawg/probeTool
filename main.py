@@ -18,7 +18,9 @@ probe_session.configure(
     dir_pos = True,         # Direction (True = positive, False = negative)
     offset = 5.0,           # Staging offset (mm)
     probe_dist = 10.0,      # Max probe travel (mm)
-    host = "192.168.1.50"   # CNC IP (ignored if debug_mode=True)
+    host = "192.168.1.50",  # CNC IP (ignored if debug_mode=True)
+    feed_move = 2000,       # Feed rate for positioning/staging moves (mm/min)
+    feed_probe = 100        # Feed rate for probing moves (mm/min)
 )
 
 # 3. Setup the UI
